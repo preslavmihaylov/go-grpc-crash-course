@@ -4,9 +4,9 @@ import (
 	"log"
 	"net"
 
-	// casinopb "gitlab.com/preslavmihaylov/go-comm-protocols-exercise/gen/casino"
-	// commonpb "gitlab.com/preslavmihaylov/go-comm-protocols-exercise/gen/common"
-	// "gitlab.com/preslavmihaylov/go-comm-protocols-exercise/gen/payment_statements"
+	// casinopb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino"
+	// commonpb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/common"
+	// "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/payment_statements"
 	"google.golang.org/grpc"
 )
 
