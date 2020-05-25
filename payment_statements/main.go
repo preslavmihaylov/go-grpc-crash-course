@@ -19,7 +19,7 @@ func main() {
 }
 
 func setupPaymentStatementsServer() (*grpc.Server, net.Listener) {
-	lis, err := net.Listen("tcp", "localhost:10001")
+	lis, err := net.Listen("tcp", paymentStatementsAddr)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
