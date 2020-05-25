@@ -33,6 +33,7 @@ func main() {
 
 	client, conn = setupClient()
 	defer conn.Close()
+	log.Println("Successfully connected to casino server...")
 
 	username = loginUser()
 	fmt.Printf("welcome back %v!\n", username)
