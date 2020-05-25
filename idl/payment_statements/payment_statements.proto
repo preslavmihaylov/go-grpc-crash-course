@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package payment_statements;
+
+import "common/types.proto";
+
+// TODO: Create service PaymentStatements
