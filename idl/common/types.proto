@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package types;
-option go_package = "gitlab.com/preslavmihaylov/go-comm-protocols-exercise/gen/common";
+option go_package = "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/common";
 
 message User {
   string id = 1;

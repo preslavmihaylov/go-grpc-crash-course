@@ -2,9 +2,10 @@ package main
 
 import (
 	"errors"
+	"log"
 
+	casinopb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino"
 	"google.golang.org/grpc"
-	// casinopb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino"
 	// commonpb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/common"
 )
 
@@ -13,7 +14,16 @@ type command string
 var errStopGambling = errors.New("user exits gambling session")
 
 func setupClient() (casinopb.CasinoClient, *grpc.ClientConn) {
-	panic("not implemented")
+	var opts []grpc.DialOption
+	opts = append(opts, grpc.WithInsecure())
+	opts = append(opts, grpc.WithBlock())
+
+	conn, err := grpc.Dial("localhost:10000", opts...)
+	if err != nil {
+		log.Fatalf("fail to dial: %v", err)
+	}
+
+	return casinopb.NewCasinoClient(conn), conn
 }
 
 func buyTokens(tokensCnt int) (string, error) {
