@@ -8,8 +8,9 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	// casinopb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino"
-	// commonpb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/common"
+
+	casinopb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino"
+	commonpb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/common"
 )
 
 func promptUserForAction() (*casinopb.Action, bool) {

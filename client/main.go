@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	casinopb "gitlab.com/preslavmihaylov/go-comm-protocols-exercise/gen/casino"
+	casinopb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino"
 	"google.golang.org/grpc"
 )
 
