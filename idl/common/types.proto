@@ -3,5 +3,15 @@ syntax = "proto3";
 package types;
 option go_package = "gitlab.com/preslavmihaylov/go-comm-protocols-exercise/gen/common";
 
-// TODO: Create common types User{string id}, Payment{User, int32 amount}, PaymentStatement{string data}
+message User {
+  string id = 1;
+}
 
+message Payment {
+  User user = 1;
+  int32 amount = 2;
+}
+
+message PaymentStatement {
+  string data = 1;
+}

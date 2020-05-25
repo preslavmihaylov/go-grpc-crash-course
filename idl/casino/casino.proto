@@ -2,4 +2,56 @@ syntax = "proto3";
 
 package casino;
 
-// TODO: Create service Casino
+import "common/types.proto";
+
+service Casino {
+  rpc BuyTokens(types.Payment) returns (Tokens) {}
+  rpc Withdraw(WithdrawRequest) returns (types.Payment) {}
+
+  rpc GetTokenBalance(types.User) returns (Tokens) {}
+
+  rpc GetPayments(types.User) returns (stream types.Payment) {}
+  rpc GetPaymentStatement(types.User) returns (types.PaymentStatement) {}
+
+  rpc Gamble(stream Action) returns (stream GambleInfo) {}
+}
+
+message WithdrawRequest {
+  types.User user = 1;
+  int32 tokensCnt = 2;
+}
+
+message Tokens {
+  int32 count = 1;
+}
+
+enum ActionType {
+  BUY = 0;
+  SELL = 1;
+}
+
+message Action {
+  types.User user = 1;
+  ActionType type = 2;
+  int32 stocksCount = 3;
+}
+
+enum GambleType {
+  STOCK_INFO = 0;
+  ACTION_RESULT = 1;
+}
+
+message GambleInfo {
+  GambleType type = 1;
+  StockInfo info = 2;
+  ActionResult result = 3;
+}
+
+message StockInfo {
+  string name = 1;
+  int32 price = 2;
+}
+
+message ActionResult {
+  string msg = 1;
+}

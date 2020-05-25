@@ -4,4 +4,7 @@ package payment_statements;
 
 import "common/types.proto";
 
-// TODO: Create service PaymentStatements
+service PaymentStatements {
+  rpc CreateStatement(stream types.Payment) returns (types.PaymentStatement) {}
+}
+
