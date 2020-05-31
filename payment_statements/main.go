@@ -1,11 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 
+	commonpb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/common"
 	"gitlab.com/preslavmihaylov/go-grpc-exercise/gen/payment_statements"
-	// commonpb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/common"
 	"google.golang.org/grpc"
 )
 
@@ -34,4 +35,27 @@ type server struct{}
 
 func (s *server) CreateStatement(stream payment_statements.PaymentStatements_CreateStatementServer) error {
 	panic("not implemented")
+}
+
+func toPaymentStatement(payments []*commonpb.Payment) *commonpb.PaymentStatement {
+	if len(payments) == 0 {
+		return &commonpb.PaymentStatement{
+			Data: "PAYMENT STATEMENT OF (unknown)\n\nNo earnings",
+		}
+	}
+
+	statement := fmt.Sprintf("PAYMENT STATEMENT OF %s\n\n", payments[0].GetUser().GetId())
+	statement += "PAYMENT HISTORY:\n"
+
+	balance := 0
+	for i, payment := range payments {
+		statement += fmt.Sprintf("\tPayment %d: %d$\n", i, payment.Amount)
+		balance += int(payment.Amount)
+	}
+
+	statement += fmt.Sprintf("\nFINAL BALANCE: %d\n", balance)
+
+	return &commonpb.PaymentStatement{
+		Data: statement,
+	}
 }
