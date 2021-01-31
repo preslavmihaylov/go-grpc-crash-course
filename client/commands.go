@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 
 	casinopb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino"
@@ -66,7 +67,21 @@ func tokenBalance() (string, error) {
 }
 
 func payments() (string, error) {
-	panic("not implemented")
+	stream, err := client.GetPayments(context.Background(), &commonpb.User{Id: username})
+	if err != nil {
+		return "", err
+	}
+
+	payments := []*commonpb.Payment{}
+	for payment, err := stream.Recv(); err != io.EOF; {
+		if err != nil {
+			return "", err
+		}
+
+		payments = append(payments, payment)
+	}
+
+	return fmt.Sprintf("Here's your payment history:\n%v", paymentHistoryString(payments)), nil
 }
 
 func paymentStatement() (string, error) {

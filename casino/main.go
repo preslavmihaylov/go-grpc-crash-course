@@ -110,7 +110,18 @@ func (c *casinoServer) GetTokenBalance(_ context.Context, user *commonpb.User) (
 }
 
 func (c *casinoServer) GetPayments(user *commonpb.User, stream casinopb.Casino_GetPaymentsServer) error {
-	panic("not implemented")
+	usrID := userID(user.GetId())
+	for _, payment := range c.userToPayments[usrID] {
+		err := stream.Send(&commonpb.Payment{
+			User:   user,
+			Amount: payment,
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (c *casinoServer) GetPaymentStatement(ctx context.Context, user *commonpb.User) (*commonpb.PaymentStatement, error) {
