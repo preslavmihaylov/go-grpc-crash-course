@@ -1,19 +1,17 @@
 syntax = "proto3";
 
 package casino;
+option go_package = "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino";
 
 import "common/types.proto";
 
 service Casino {
-  rpc BuyTokens(types.Payment) returns (Tokens) {}
-  rpc Withdraw(WithdrawRequest) returns (types.Payment) {}
-
-  rpc GetTokenBalance(types.User) returns (Tokens) {}
-
-  rpc GetPayments(types.User) returns (stream types.Payment) {}
-  rpc GetPaymentStatement(types.User) returns (types.PaymentStatement) {}
-
-  rpc Gamble(stream Action) returns (stream GambleInfo) {}
+  rpc BuyTokens(types.Payment) returns (Tokens);
+  rpc Withdraw(WithdrawRequest) returns (types.Payment);
+  rpc GetTokenBalance(types.User) returns (Tokens);
+  rpc GetPayments(types.User) returns (stream types.Payment);
+  rpc GetPaymentStatement(types.User) returns (types.PaymentStatement);
+  rpc Gamble(stream Action) returns (stream GambleInfo);
 }
 
 message WithdrawRequest {
@@ -22,7 +20,7 @@ message WithdrawRequest {
 }
 
 message Tokens {
-  int32 count = 1;
+  int32 count = 1; 
 }
 
 enum ActionType {
@@ -41,12 +39,6 @@ enum GambleType {
   ACTION_RESULT = 1;
 }
 
-message GambleInfo {
-  GambleType type = 1;
-  StockInfo info = 2;
-  ActionResult result = 3;
-}
-
 message StockInfo {
   string name = 1;
   int32 price = 2;
@@ -54,4 +46,10 @@ message StockInfo {
 
 message ActionResult {
   string msg = 1;
+}
+
+message GambleInfo {
+  GambleType type = 1;
+  StockInfo info = 2;
+  ActionResult result = 3;
 }
