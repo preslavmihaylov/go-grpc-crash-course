@@ -5,6 +5,15 @@ option go_package = "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino";
 
 import "common/types.proto";
 
+service Casino {
+  rpc BuyTokens(types.Payment) returns (Tokens);
+  rpc Withdraw(WithdrawRequest) returns (types.Payment);
+  rpc GetTokenBalance(types.User) returns (Tokens);
+  rpc GetPayments(types.User) returns (stream types.Payment);
+  rpc GetPaymentStatement(types.User) returns (types.PaymentStatement);
+  rpc Gamble(stream Action) returns (stream GambleInfo);
+}
+
 message Tokens {
   int32 count = 1; 
 }
@@ -44,22 +53,3 @@ message GambleInfo {
   StockInfo info = 2;
   ActionResult result = 3;
 }
-
-// TODO: Create service Casino
-service Casino {
-  rpc BuyTokens(types.Payment) returns (Tokens);
-  rpc Withdraw(WithdrawRequest) returns (types.Payment);
-  rpc GetTokenBalance(types.User) returns (Tokens);
-  rpc GetPayments(types.User) returns (stream types.Payment);
-  rpc GetPaymentStatement(types.User) returns (types.PaymentStatement);
-  rpc Gamble(stream Action) returns (stream GambleInfo);
-}
-
-/* 
-BuyTokens - accepts a Payment and returns Tokens
-Withdraw - accepts a WithdrawRequest and returns a Payment
-GetTokenBalance - accepts a User and returns Tokens
-GetPayments - accepts a User and returns a stream Payment
-GetPaymentStatement - accepts a User and returns a PaymentStatement
-Gamble - accepts a stream Action and returns a stream GambleInfo
- */
