@@ -3,15 +3,9 @@ syntax = "proto3";
 package types;
 option go_package = "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/common";
 
-message User {
-  string id = 1;
-}
-
-message Payment{
-  User user = 1;
-  int32 amount = 2;
-}
-
-message PaymentStatement {
-  string data = 1;
-}
+/* TODO:
+  This file doesn’t have any service definitions, only three types:
+    User - message with a single field string id
+    Payment - message with fields User user and int32 amount
+    PaymentStatement - message with a single field string data
+*/

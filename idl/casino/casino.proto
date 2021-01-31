@@ -5,61 +5,32 @@ option go_package = "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino";
 
 import "common/types.proto";
 
-message Tokens {
-  int32 count = 1; 
-}
+/* TODO:
+  This proto file should contain a single service, named Casino and several defined types.
 
-message WithdrawRequest {
-  types.User user = 1;
-  int32 tokensCnt = 2;
-}
+  The types are as follows: 
+    Tokens - message with a single field int32 count
+    WithdrawRequest - message with fields User user and int32 tokensCnt
+    ActionType - enum with values BUY and SELL
+    Action - message with fields: 
+    User user 
+    ActionType type 
+    int32 stocksCount
+    GambleType - enum with values STOCK_INFO and ACTION_RESULT
+    StockInfo - message with fields string name and int32 price
+    ActionResult - message with field string message 
+    GambleInfo - message with fields:
+    GambleType type
+    StockInfo info
+    ActionResult result
 
-enum ActionType {
-  BUY = 0;
-  SELL = 1;
-}
+  The service should contain the following routines:
+    BuyTokens - accepts a Payment and returns Tokens
+    Withdraw - accepts a WithdrawRequest and returns a Payment
+    GetTokenBalance - accepts a User and returns Tokens
+    GetPayments - accepts a User and returns a stream Payment
+    GetPaymentStatement - accepts a User and returns a PaymentStatement
+    Gamble - accepts a stream Action and returns a stream GambleInfo
 
-message Action {
-  types.User user = 1;
-  ActionType type = 2;
-  int32 stocksCount = 3;
-}
-
-enum GambleType {
-  STOCK_INFO = 0;
-  ACTION_RESULT = 1;
-}
-
-message StockInfo {
-  string name = 1;
-  int32 price = 2;
-}
-
-message ActionResult {
-  string message = 1;
-}
-
-message GambleInfo {
-  GambleType type = 1;
-  StockInfo info = 2;
-  ActionResult result = 3;
-}
-
-// TODO: Create service Casino
-service Casino {
-  rpc BuyTokens(types.Payment) returns (Tokens);
-  rpc Withdraw(WithdrawRequest) returns (types.Payment);
-  rpc GetTokenBalance(types.User) returns (Tokens);
-  rpc GetPayments(types.User) returns (stream types.Payment);
-  rpc GetPaymentStatement(types.User) returns (types.PaymentStatement);
-  rpc Gamble(stream Action) returns (stream GambleInfo);
-}
-
-/* 
-BuyTokens - accepts a Payment and returns Tokens
-Withdraw - accepts a WithdrawRequest and returns a Payment
-GetTokenBalance - accepts a User and returns Tokens
-GetPayments - accepts a User and returns a stream Payment
-GetPaymentStatement - accepts a User and returns a PaymentStatement
-Gamble - accepts a stream Action and returns a stream GambleInfo
+  The types User, Payment and PaymentStatement are defined in idl/common/types.proto.
  */

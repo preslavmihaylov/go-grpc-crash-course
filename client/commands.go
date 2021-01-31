@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"log"
 
 	casinopb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino"
 
@@ -16,14 +15,9 @@ const casinoAddr = "localhost:10000"
 
 var errStopGambling = errors.New("user exits gambling session")
 
+// TODO: Setup the casinopb.CasinoClient
 func setupClient() (casinopb.CasinoClient, *grpc.ClientConn) {
-	conn, err := grpc.Dial(casinoAddr, grpc.WithInsecure())
-	if err != nil {
-		log.Fatalf("couldn't dial payment statements server: %v", err)
-	}
-
-	client := casinopb.NewCasinoClient(conn)
-	return client, conn
+	panic("not implemented")
 }
 
 func buyTokens(tokensCnt int) (string, error) {

@@ -5,6 +5,9 @@ option go_package = "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/payment_sta
 
 import "common/types.proto";
 
-service PaymentStatements {
-  rpc CreateStatement(stream types.Payment) returns (types.PaymentStatement);
-}
+/* TODO:
+  This file has a single service PaymentStatements.
+  The service contains a single routine CreateStatement which accepts a stream Payment and returns a PaymentStatement.
+
+  Both these types are defined in idl/common/types.proto.  
+ */
