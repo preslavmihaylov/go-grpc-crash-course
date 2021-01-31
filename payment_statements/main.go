@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net"
 
@@ -34,7 +35,21 @@ func setupPaymentStatementsServer() (*grpc.Server, net.Listener) {
 type server struct{}
 
 func (s *server) CreateStatement(stream payment_statements.PaymentStatements_CreateStatementServer) error {
-	panic("not implemented")
+	log.Println("CreateStatement invoked...")
+
+	payments := []*commonpb.Payment{}
+	for {
+		payment, err := stream.Recv()
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			return fmt.Errorf("something went wrong with recv from payments stream: %w", err)
+		}
+
+		payments = append(payments, payment)
+	}
+
+	return stream.SendAndClose(toPaymentStatement(payments))
 }
 
 func toPaymentStatement(payments []*commonpb.Payment) *commonpb.PaymentStatement {

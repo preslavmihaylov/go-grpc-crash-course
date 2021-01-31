@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 
+	"gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino"
 	casinopb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino"
 	commonpb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/common"
 	"gitlab.com/preslavmihaylov/go-grpc-exercise/gen/payment_statements"
@@ -91,7 +92,8 @@ func (c *casinoServer) Withdraw(ctx context.Context, withdrawReq *casinopb.Withd
 	log.Printf("Withdraw invoked with tokens %v\n", toWithdraw)
 
 	usrID := userID(withdrawReq.User.GetId())
-	if c.hasEnoughTokens(usrID, toWithdraw) {
+	log.Println(c.userToTokens[usrID])
+	if !c.hasEnoughTokens(usrID, toWithdraw) {
 		return nil, fmt.Errorf("not enough tokens to withdraw")
 	}
 
@@ -110,14 +112,17 @@ func (c *casinoServer) GetTokenBalance(_ context.Context, user *commonpb.User) (
 }
 
 func (c *casinoServer) GetPayments(user *commonpb.User, stream casinopb.Casino_GetPaymentsServer) error {
+	log.Printf("GetPayments invoked with user %v", user)
+
 	usrID := userID(user.GetId())
-	for _, payment := range c.userToPayments[usrID] {
+	payments := c.userToPayments[usrID]
+	for _, payment := range payments {
 		err := stream.Send(&commonpb.Payment{
 			User:   user,
 			Amount: payment,
 		})
 		if err != nil {
-			return err
+			return fmt.Errorf("failed sending payment through stream: %w", err)
 		}
 	}
 
@@ -125,9 +130,25 @@ func (c *casinoServer) GetPayments(user *commonpb.User, stream casinopb.Casino_G
 }
 
 func (c *casinoServer) GetPaymentStatement(ctx context.Context, user *commonpb.User) (*commonpb.PaymentStatement, error) {
-	panic("not implemented")
+	log.Printf("GetPaymentStatement invoked with user %v\n", user)
+
+	stream, err := paymentStatementsClient.CreateStatement(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't create payment statements stream: %w", err)
+	}
+
+	usrID := userID(user.GetId())
+	payments := c.userToPayments[usrID]
+	for _, payment := range payments {
+		err := stream.Send(&commonpb.Payment{User: user, Amount: payment})
+		if err != nil {
+			return nil, fmt.Errorf("failed sending payment to payments_statements: %w", err)
+		}
+	}
+
+	return stream.CloseAndRecv()
 }
 
-func (c *casinoServer) Gamble(stream casinopb.Casino_GambleServer) error {
-	panic("not implemented")
+func (c *casinoServer) Gamble(_ casino.Casino_GambleServer) error {
+	panic("not implemented") // TODO: Implement
 }
