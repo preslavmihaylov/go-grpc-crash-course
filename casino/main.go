@@ -91,7 +91,7 @@ func (c *casinoServer) Withdraw(ctx context.Context, withdrawReq *casinopb.Withd
 	log.Printf("Withdraw invoked with tokens %v\n", toWithdraw)
 
 	usrID := userID(withdrawReq.User.GetId())
-	if c.hasEnoughTokens(usrID, toWithdraw) {
+	if !c.hasEnoughTokens(usrID, toWithdraw) {
 		return nil, fmt.Errorf("not enough tokens to withdraw")
 	}
 
