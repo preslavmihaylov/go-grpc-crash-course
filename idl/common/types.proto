@@ -7,7 +7,7 @@ message User {
   string id = 1;
 }
 
-message Payment {
+message Payment{
   User user = 1;
   int32 amount = 2;
 }
