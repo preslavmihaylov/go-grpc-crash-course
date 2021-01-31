@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"log"
 	"net"
 
@@ -78,34 +78,31 @@ func (c *casinoServer) BuyTokens(ctx context.Context, payment *commonpb.Payment)
 	log.Printf("BuyTokens invoked with payment %v\n", payment)
 
 	usrID := userID(payment.User.GetId())
+	tokens := payment.GetAmount() * tokensPerDollar
 
-	tokens := payment.Amount * tokensPerDollar
-	c.userToPayments[usrID] = append(c.userToPayments[usrID], -payment.Amount)
 	c.userToTokens[usrID] += tokens
+	c.userToPayments[usrID] = append(c.userToPayments[usrID], -payment.Amount)
 
 	return &casinopb.Tokens{Count: tokens}, nil
 }
 
 func (c *casinoServer) Withdraw(ctx context.Context, withdrawReq *casinopb.WithdrawRequest) (*commonpb.Payment, error) {
-	toWithdraw := withdrawReq.TokensCnt
+	toWithdraw := withdrawReq.GetTokensCnt()
 	log.Printf("Withdraw invoked with tokens %v\n", toWithdraw)
 
 	usrID := userID(withdrawReq.User.GetId())
-	if !c.hasEnoughTokens(usrID, toWithdraw) {
-		return nil, errors.New("not enough tokens to withdraw")
+	if c.hasEnoughTokens(usrID, toWithdraw) {
+		return nil, fmt.Errorf("not enough tokens to withdraw")
 	}
 
 	amount := toWithdraw / tokensPerDollar
-	c.userToPayments[usrID] = append(c.userToPayments[usrID], amount)
 	c.userToTokens[usrID] -= toWithdraw
+	c.userToPayments[usrID] = append(c.userToPayments[usrID], amount)
 
-	return &commonpb.Payment{
-		User:   withdrawReq.User,
-		Amount: amount,
-	}, nil
+	return &commonpb.Payment{User: withdrawReq.User, Amount: amount}, nil
 }
 
-func (c *casinoServer) GetTokenBalance(ctx context.Context, user *commonpb.User) (*casinopb.Tokens, error) {
+func (c *casinoServer) GetTokenBalance(_ context.Context, user *commonpb.User) (*casinopb.Tokens, error) {
 	log.Printf("GetTokenBalance invoked with user %v\n", user)
 
 	usrID := userID(user.GetId())

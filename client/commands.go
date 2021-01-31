@@ -51,7 +51,7 @@ func withdraw(tokensCnt int) (string, error) {
 		return "", fmt.Errorf("couldn't withdraw tokens: %w", err)
 	}
 
-	return fmt.Sprintf("Successfully withdrew %d tokens and got %d$!", tokensCnt, res.Amount), nil
+	return fmt.Sprintf("Successfully withdrew %d tokens and got %d$!", tokensCnt, res.GetAmount()), nil
 }
 
 func tokenBalance() (string, error) {
@@ -62,7 +62,7 @@ func tokenBalance() (string, error) {
 		return "", fmt.Errorf("couldn't get token balance: %w", err)
 	}
 
-	return fmt.Sprintf("Your token balance is %v.", res.Count), nil
+	return fmt.Sprintf("Your token balance is %v.", res.GetCount()), nil
 }
 
 func payments() (string, error) {
