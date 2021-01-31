@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
 
@@ -22,13 +21,12 @@ func main() {
 }
 
 func setupPaymentStatementsServer() (*grpc.Server, net.Listener) {
-	lis, err := net.Listen("tcp", fmt.Sprintf(paymentStatementsAddr))
+	lis, err := net.Listen("tcp", paymentStatementsAddr)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	var opts []grpc.ServerOption
-	grpcServer := grpc.NewServer(opts...)
+	grpcServer := grpc.NewServer()
 	payment_statements.RegisterPaymentStatementsServer(grpcServer, &server{})
 
 	return grpcServer, lis

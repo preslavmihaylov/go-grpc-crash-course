@@ -14,13 +14,13 @@ service Casino {
   rpc Gamble(stream Action) returns (stream GambleInfo);
 }
 
-message Tokens {
-  int32 count = 1; 
-}
-
 message WithdrawRequest {
   types.User user = 1;
   int32 tokensCnt = 2;
+}
+
+message Tokens {
+  int32 count = 1; 
 }
 
 enum ActionType {
@@ -45,7 +45,7 @@ message StockInfo {
 }
 
 message ActionResult {
-  string message = 1;
+  string msg = 1;
 }
 
 message GambleInfo {
