@@ -17,13 +17,16 @@ const casinoAddr = "localhost:10000"
 var errStopGambling = errors.New("user exits gambling session")
 
 func setupClient() (casinopb.CasinoClient, *grpc.ClientConn) {
-	conn, err := grpc.Dial(casinoAddr, grpc.WithInsecure())
+	var opts []grpc.DialOption
+	opts = append(opts, grpc.WithInsecure())
+	opts = append(opts, grpc.WithBlock())
+
+	conn, err := grpc.Dial(casinoAddr, opts...)
 	if err != nil {
 		log.Fatalf("couldn't dial payment statements server: %v", err)
 	}
 
-	client := casinopb.NewCasinoClient(conn)
-	return client, conn
+	return casinopb.NewCasinoClient(conn), conn
 }
 
 func buyTokens(tokensCnt int) (string, error) {
