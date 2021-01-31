@@ -37,21 +37,23 @@ func setupCasinoServer() (*grpc.Server, net.Listener) {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	var opts []grpc.ServerOption
-	grpcServer := grpc.NewServer(opts...)
+	grpcServer := grpc.NewServer()
 	casinopb.RegisterCasinoServer(grpcServer, newCasinoServer())
 
 	return grpcServer, lis
 }
 
 func setupPaymentStatementsClient() (payment_statements.PaymentStatementsClient, *grpc.ClientConn) {
-	conn, err := grpc.Dial(paymentStatementsAddr, grpc.WithInsecure())
+	var opts []grpc.DialOption
+	opts = append(opts, grpc.WithInsecure())
+	opts = append(opts, grpc.WithBlock())
+
+	conn, err := grpc.Dial(paymentStatementsAddr, opts...)
 	if err != nil {
 		log.Fatalf("couldn't dial payment statements server: %v", err)
 	}
 
-	client := payment_statements.NewPaymentStatementsClient(conn)
-	return client, conn
+	return payment_statements.NewPaymentStatementsClient(conn), conn
 }
 
 func newCasinoServer() *casinoServer {

@@ -35,5 +35,5 @@ func setupPaymentStatementsServer() (*grpc.Server, net.Listener) {
 type server struct{}
 
 func (s *server) CreateStatement(stream payment_statements.PaymentStatements_CreateStatementServer) error {
-	panic("not implemented") // TODO: Implement
+	panic("not implemented")
 }
