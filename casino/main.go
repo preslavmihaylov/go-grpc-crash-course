@@ -74,25 +74,25 @@ type casinoServer struct {
 }
 
 func (c *casinoServer) BuyTokens(_ context.Context, _ *commonpb.Payment) (*casinopb.Tokens, error) {
-	panic("not implemented") // TODO: Implement
+	panic("not implemented")
 }
 
 func (c *casinoServer) Withdraw(_ context.Context, _ *casinopb.WithdrawRequest) (*commonpb.Payment, error) {
-	panic("not implemented") // TODO: Implement
+	panic("not implemented")
 }
 
 func (c *casinoServer) GetTokenBalance(_ context.Context, _ *commonpb.User) (*casinopb.Tokens, error) {
-	panic("not implemented") // TODO: Implement
+	panic("not implemented")
 }
 
 func (c *casinoServer) GetPayments(_ *commonpb.User, _ casinopb.Casino_GetPaymentsServer) error {
-	panic("not implemented") // TODO: Implement
+	panic("not implemented")
 }
 
 func (c *casinoServer) GetPaymentStatement(_ context.Context, _ *commonpb.User) (*commonpb.PaymentStatement, error) {
-	panic("not implemented") // TODO: Implement
+	panic("not implemented")
 }
 
 func (c *casinoServer) Gamble(_ casinopb.Casino_GambleServer) error {
-	panic("not implemented") // TODO: Implement
+	panic("not implemented")
 }
