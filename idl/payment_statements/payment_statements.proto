@@ -1,7 +1,13 @@
 syntax = "proto3";
 
 package payment_statements;
+option go_package = "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/payment_statements";
 
 import "common/types.proto";
 
-// TODO: Create service PaymentStatements
+/* TODO:
+  This file has a single service PaymentStatements.
+  The service contains a single routine CreateStatement which accepts a stream Payment and returns a PaymentStatement.
+
+  Both these types are defined in idl/common/types.proto.  
+ */

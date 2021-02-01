@@ -1,5 +1,36 @@
 syntax = "proto3";
 
 package casino;
+option go_package = "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino";
 
-// TODO: Create service Casino
+import "common/types.proto";
+
+/* TODO:
+  This proto file should contain a single service, named Casino and several defined types.
+
+  The types are as follows: 
+    Tokens - message with a single field int32 count
+    WithdrawRequest - message with fields User user and int32 tokensCnt
+    ActionType - enum with values BUY and SELL
+    Action - message with fields: 
+    User user 
+    ActionType type 
+    int32 stocksCount
+    GambleType - enum with values STOCK_INFO and ACTION_RESULT
+    StockInfo - message with fields string name and int32 price
+    ActionResult - message with field string message 
+    GambleInfo - message with fields:
+    GambleType type
+    StockInfo info
+    ActionResult result
+
+  The service should contain the following routines:
+    BuyTokens - accepts a Payment and returns Tokens
+    Withdraw - accepts a WithdrawRequest and returns a Payment
+    GetTokenBalance - accepts a User and returns Tokens
+    GetPayments - accepts a User and returns a stream Payment
+    GetPaymentStatement - accepts a User and returns a PaymentStatement
+    Gamble - accepts a stream Action and returns a stream GambleInfo
+
+  The types User, Payment and PaymentStatement are defined in idl/common/types.proto.
+ */
