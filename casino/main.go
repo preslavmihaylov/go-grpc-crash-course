@@ -6,7 +6,6 @@ import (
 	"log"
 	"net"
 
-	"gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino"
 	casinopb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino"
 	commonpb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/common"
 	"gitlab.com/preslavmihaylov/go-grpc-exercise/gen/payment_statements"
@@ -14,6 +13,7 @@ import (
 )
 
 type userID string
+type streamHandler func(stream casinopb.Casino_GambleServer) error
 
 var (
 	tokensPerDollar         = int32(5)
@@ -149,6 +149,39 @@ func (c *casinoServer) GetPaymentStatement(ctx context.Context, user *commonpb.U
 	return stream.CloseAndRecv()
 }
 
-func (c *casinoServer) Gamble(_ casino.Casino_GambleServer) error {
-	panic("not implemented") // TODO: Implement
+func (c *casinoServer) Gamble(stream casinopb.Casino_GambleServer) error {
+	log.Println("Gamble invoked...")
+
+	errc := make(chan error, 2)
+	go iterateStreamWithHandler(errc, stream, c.handleUserGamblingAction)
+	go iterateStreamWithHandler(errc, stream, c.incrementAndSendStockPrice)
+
+	err := <-errc
+	log.Println("Gambling ending with err " + err.Error())
+
+	return err
+}
+
+func iterateStreamWithHandler(errc chan error, stream casinopb.Casino_GambleServer, handler streamHandler) {
+	for {
+		select {
+		case <-errc:
+			return
+		default:
+		}
+
+		err := handler(stream)
+		if err != nil {
+			errc <- err
+			break
+		}
+	}
+}
+
+func (c *casinoServer) handleUserGamblingAction(stream casinopb.Casino_GambleServer) error {
+	panic("not implemented")
+}
+
+func (c *casinoServer) incrementAndSendStockPrice(stream casinopb.Casino_GambleServer) error {
+	panic("not implemented")
 }
