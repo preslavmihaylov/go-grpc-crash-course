@@ -2,9 +2,12 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
+	"math/rand"
 	"net"
+	"time"
 
 	casinopb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino"
 	commonpb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/common"
@@ -179,9 +182,56 @@ func iterateStreamWithHandler(errc chan error, stream casinopb.Casino_GambleServ
 }
 
 func (c *casinoServer) handleUserGamblingAction(stream casinopb.Casino_GambleServer) error {
-	panic("not implemented")
+	action, err := stream.Recv()
+	if err != nil {
+		return err
+	}
+
+	usrID := userID(action.User.GetId())
+	targetTokens := action.StocksCount * c.stockPrice
+	switch action.Type {
+	case casinopb.ActionType_BUY:
+		if !c.hasEnoughTokens(usrID, targetTokens) {
+			return stream.Send(&casinopb.GambleInfo{
+				Type:   casinopb.GambleType_ACTION_RESULT,
+				Result: &casinopb.ActionResult{Msg: "you don't have enough tokens"},
+			})
+		}
+
+		c.userToTokens[usrID] -= targetTokens
+		c.userToStocks[usrID] += action.StocksCount
+	case casinopb.ActionType_SELL:
+		if !c.hasEnoughStocks(usrID, action.StocksCount) {
+			return stream.Send(&casinopb.GambleInfo{
+				Type:   casinopb.GambleType_ACTION_RESULT,
+				Result: &casinopb.ActionResult{Msg: "you don't have enough stocks to sell"},
+			})
+		}
+
+		c.userToTokens[usrID] += targetTokens
+		c.userToStocks[usrID] -= action.StocksCount
+	default:
+		return errors.New("unknown operation")
+	}
+
+	return stream.Send(&casinopb.GambleInfo{
+		Type:   casinopb.GambleType_ACTION_RESULT,
+		Result: &casinopb.ActionResult{Msg: "operation executed successfully"},
+	})
+
 }
 
 func (c *casinoServer) incrementAndSendStockPrice(stream casinopb.Casino_GambleServer) error {
-	panic("not implemented")
+	time.Sleep(10 * time.Second)
+	c.stockPrice += int32(rand.Intn(14) + 1)
+	c.stockPrice -= int32(rand.Intn(14) + 1)
+
+	log.Println("sending stock price", c.stockPrice)
+	return stream.Send(&casinopb.GambleInfo{
+		Type: casinopb.GambleType_STOCK_INFO,
+		Info: &casinopb.StockInfo{
+			Name:  "AwesomeStock",
+			Price: c.stockPrice,
+		},
+	})
 }

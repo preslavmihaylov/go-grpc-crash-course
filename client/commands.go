@@ -133,9 +133,27 @@ func iterateStreamWithHandler(errc chan error, stream casinopb.Casino_GambleClie
 }
 
 func fetchGamblingInfo(stream casinopb.Casino_GambleClient) error {
-	panic("not implemented")
+	gambleInfo, err := stream.Recv()
+	if err != nil {
+		return err
+	}
+
+	if gambleInfo.Type == casinopb.GambleType_STOCK_INFO {
+		fmt.Printf("%v - current stock price: %v\n", gambleInfo.Info.GetName(), gambleInfo.Info.GetPrice())
+	} else if gambleInfo.Type == casinopb.GambleType_ACTION_RESULT {
+		fmt.Println(gambleInfo.Result.GetMsg())
+	}
+
+	return nil
 }
 
 func sendUserGamblingAction(stream casinopb.Casino_GambleClient) error {
-	panic("not implemented")
+	action, done := promptUserForAction()
+	if done {
+		return errStopGambling
+	} else if action == nil {
+		return nil
+	}
+
+	return stream.Send(action)
 }
