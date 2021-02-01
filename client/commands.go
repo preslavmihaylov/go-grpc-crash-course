@@ -13,6 +13,7 @@ import (
 )
 
 type command string
+type streamHandler func(stream casinopb.Casino_GambleClient) error
 
 var errStopGambling = errors.New("user exits gambling session")
 
@@ -97,5 +98,44 @@ func paymentStatement() (string, error) {
 }
 
 func gamble() (string, error) {
+	stream, err := client.Gamble(context.Background())
+	if err != nil {
+		return "", fmt.Errorf("failed to open gambling stream: %w", err)
+	}
+	defer stream.CloseSend()
+
+	errc := make(chan error, 2)
+	go iterateStreamWithHandler(errc, stream, fetchGamblingInfo)
+	go iterateStreamWithHandler(errc, stream, sendUserGamblingAction)
+
+	finalErr := <-errc
+	if finalErr != nil && finalErr != io.EOF && finalErr != errStopGambling {
+		return "", fmt.Errorf("gambling unexpectedly stopped: %w", finalErr)
+	}
+
+	return "finished gambling!", nil
+}
+
+func iterateStreamWithHandler(errc chan error, stream casinopb.Casino_GambleClient, handler streamHandler) {
+	for {
+		select {
+		case <-errc:
+			return
+		default:
+		}
+
+		err := handler(stream)
+		if err != nil {
+			errc <- err
+			break
+		}
+	}
+}
+
+func fetchGamblingInfo(stream casinopb.Casino_GambleClient) error {
+	panic("not implemented")
+}
+
+func sendUserGamblingAction(stream casinopb.Casino_GambleClient) error {
 	panic("not implemented")
 }
