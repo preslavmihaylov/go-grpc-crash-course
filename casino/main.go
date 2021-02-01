@@ -59,7 +59,7 @@ func setupPaymentStatementsClient() (payment_statements.PaymentStatementsClient,
 
 func newCasinoServer() *casinoServer {
 	return &casinoServer{
-		stockPrice:     10,
+		stockPrice:     100,
 		userToTokens:   map[userID]int32{},
 		userToPayments: map[userID][]int32{},
 		userToStocks:   map[userID]int32{},
