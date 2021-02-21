@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package payment_statements;
-option go_package = "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/payment_statements";
+option go_package = "github.com/preslavmihaylov/go-grpc-crash-course/gen/payment_statements";
 
 import "common/types.proto";
 
