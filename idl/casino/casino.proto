@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package casino;
-option go_package = "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino";
+option go_package = "github.com/preslavmihaylov/go-grpc-crash-course/gen/casino";
 
 import "common/types.proto";
 
