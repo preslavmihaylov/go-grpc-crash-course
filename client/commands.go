@@ -7,8 +7,8 @@ import (
 	"io"
 	"log"
 
-	casinopb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino"
-	commonpb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/common"
+	casinopb "github.com/preslavmihaylov/go-grpc-crash-course/gen/casino"
+	commonpb "github.com/preslavmihaylov/go-grpc-crash-course/gen/common"
 	"google.golang.org/grpc"
 )
 
