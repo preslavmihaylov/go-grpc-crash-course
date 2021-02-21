@@ -4,8 +4,8 @@ import (
 	"net"
 
 	"google.golang.org/grpc"
-	// commonpb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/common"
-	// "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/payment_statements"
+	// commonpb "github.com/preslavmihaylov/go-grpc-crash-course/gen/common"
+	// "github.com/preslavmihaylov/go-grpc-crash-course/gen/payment_statements"
 )
 
 var (
