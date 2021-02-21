@@ -1,4 +1,4 @@
-module gitlab.com/preslavmihaylov/go-grpc-exercise
+module github.com/preslavmihaylov/go-grpc-crash-course
 
 go 1.14
 
