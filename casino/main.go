@@ -6,10 +6,10 @@ import (
 	"log"
 	"net"
 
-	"gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino"
-	casinopb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/casino"
-	commonpb "gitlab.com/preslavmihaylov/go-grpc-exercise/gen/common"
-	"gitlab.com/preslavmihaylov/go-grpc-exercise/gen/payment_statements"
+	"github.com/preslavmihaylov/go-grpc-crash-course/gen/casino"
+	casinopb "github.com/preslavmihaylov/go-grpc-crash-course/gen/casino"
+	commonpb "github.com/preslavmihaylov/go-grpc-crash-course/gen/common"
+	"github.com/preslavmihaylov/go-grpc-crash-course/gen/payment_statements"
 	"google.golang.org/grpc"
 )
 
